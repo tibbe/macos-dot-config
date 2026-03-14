@@ -1,4 +1,4 @@
-`~/zshenv` needs to exist and contain:
+`~/.zshenv` needs to exist and contain:
 
 ```sh
 export ZDOTDIR="$HOME/.config/zsh"
