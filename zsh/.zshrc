@@ -100,11 +100,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-if command -v zoxide &> /dev/null; then
-  eval "$(zoxide init zsh)"
-fi
-
-source <(fzf --zsh)
+source ~/.config/zsh/rc
 
 eval "$(rbenv init - zsh)"
 alias brew='env PATH="${PATH//$(pyenv root)\/shims:/}" brew'
@@ -126,5 +122,3 @@ export AWS_SDK_LOAD_CONFIG=1
 
 . "$HOME/.local/bin/env"
 . "/Users/tibbe/.deno/env"
-
-source ~/.config/zsh/aliases
