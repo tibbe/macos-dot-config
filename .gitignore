@@ -1,0 +1,13 @@
+Autodesk/
+cagent/
+configstore/
+diesel_cli/
+flipper/
+fish/
+gh/
+temporalio/
+uv/
+wireshark/
+yarn/
+zsh/.zcompdump*
+zsh/.zsh_history
