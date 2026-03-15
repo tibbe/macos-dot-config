@@ -3,6 +3,7 @@ tt.*
 doc/tags
 debug
 .repro
+.nvimlog
 foo.*
 *.log
 data

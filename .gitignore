@@ -9,5 +9,12 @@ temporalio/
 uv/
 wireshark/
 yarn/
+
+# Machine-local state and generated artifacts
+.DS_Store
+.nvimlog
+nvim/.nvimlog
 zsh/.zcompdump*
+zsh/**/*.zwc
 zsh/.zsh_history
+zsh/.zsh_sessions/
