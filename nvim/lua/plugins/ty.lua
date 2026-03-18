@@ -3,7 +3,16 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        ty = {},
+        ty = {
+          settings = {
+            ty = {
+              inlayHints = {
+                variableTypes = false,
+                callArgumentNames = false,
+              },
+            },
+          },
+        },
         ruff = {
           init_options = {
             settings = {
