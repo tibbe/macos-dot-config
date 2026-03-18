@@ -1,0 +1,2 @@
+# Send macOS Option/Alt as Meta so tmux can receive bindings like M-1.
+macos-option-as-alt = true
