@@ -15,3 +15,10 @@ Install Ghostty:
 ```sh
 brew install --cask ghostty
 ```
+
+Link configs in `~` to `~/.config`:
+
+```sh
+ln -s ~/.config/tmux/tmux.conf ~/.tmux.conf
+```
+
