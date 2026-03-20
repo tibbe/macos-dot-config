@@ -3,6 +3,6 @@
 -- Add any additional keymaps here
 
 vim.keymap.del("n", "<leader><space>")
-vim.keymap.set("n", "<leader><space>", LazyVim.pick("files", { root = false }), {
+vim.keymap.set("n", "<leader><space>", LazyVim.pick("files", { root = false, hidden = true }), {
   desc = "Find Files (cwd)",
 })
