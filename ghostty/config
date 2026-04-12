@@ -1,2 +1,4 @@
 # Send macOS Option/Alt as Meta so tmux can receive bindings like M-1.
-macos-option-as-alt = true
+# On macOS, Ghostty reads config from:
+# ~/Library/Application Support/com.mitchellh.ghostty/config
+# This file is unused by the GUI app but kept as a reference.

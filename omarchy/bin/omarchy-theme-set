@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+OMARCHY_DIR="$HOME/.config/omarchy"
+THEMES_DIR="$OMARCHY_DIR/themes"
+CURRENT_DIR="$OMARCHY_DIR/current"
+CURRENT_LINK="$CURRENT_DIR/theme"
+
+THEME="${1:-}"
+if [[ -z "$THEME" ]]; then
+  echo "Usage: omarchy-theme-set <theme-name>"
+  echo "Available: $(ls "$THEMES_DIR")"
+  exit 1
+fi
+if [[ ! -d "$THEMES_DIR/$THEME" ]]; then
+  echo "Theme '$THEME' not found. Available: $(ls "$THEMES_DIR")"
+  exit 1
+fi
+
+# Update current/theme symlink
+mkdir -p "$CURRENT_DIR"
+ln -sfn "$THEMES_DIR/$THEME" "$CURRENT_LINK"
+
+# Generate themed configs from templates (mirrors omarchy-theme-set-templates)
+COLORS_FILE="$CURRENT_LINK/colors.toml"
+TEMPLATES_DIR="$OMARCHY_DIR/default/themed"
+
+if [[ -f "$COLORS_FILE" ]]; then
+  sed_script=$(mktemp)
+
+  while IFS='=' read -r key value; do
+    key="${key//[\"\' ]/}"
+    [[ $key && $key != \#* ]] || continue
+    value="${value#*[\"\']}"
+    value="${value%%[\"\']*}"
+    printf 's|{{ %s }}|%s|g\n' "$key" "$value"
+    printf 's|{{ %s_strip }}|%s|g\n' "$key" "${value#\#}"
+    if [[ $value =~ ^# ]]; then
+      hex="${value#\#}"
+      rgb="$((16#${hex:0:2})),$((16#${hex:2:2})),$((16#${hex:4:2}))"
+      printf 's|{{ %s_rgb }}|%s|g\n' "$key" "$rgb"
+    fi
+  done < "$COLORS_FILE" > "$sed_script"
+
+  for tpl in "$TEMPLATES_DIR"/*.tpl; do
+    filename=$(basename "$tpl" .tpl)
+    sed -f "$sed_script" "$tpl" > "$CURRENT_DIR/$filename"
+  done
+
+  rm "$sed_script"
+fi
+
+# Reload tmux (no-op if not running)
+tmux source-file "$HOME/.config/tmux/tmux.conf" 2>/dev/null || true
+
+echo "Theme '$THEME' applied."
+echo "→ Ghostty: open a new window to pick up terminal colors"
+echo "→ Neovim:  run :Lazy reload to apply the new colorscheme"

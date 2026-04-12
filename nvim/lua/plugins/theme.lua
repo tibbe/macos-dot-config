@@ -1,0 +1,1 @@
+/Users/tibbe/.config/omarchy/current/theme/neovim.lua
