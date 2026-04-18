@@ -18,3 +18,4 @@ zsh/.zcompdump*
 zsh/**/*.zwc
 zsh/.zsh_history
 zsh/.zsh_sessions/
+omarchy/current/
