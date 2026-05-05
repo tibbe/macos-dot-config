@@ -1,13 +1,12 @@
 return {
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "bjarneo/ethereal.nvim",
     priority = 1000,
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "ethereal",
     },
   },
 }

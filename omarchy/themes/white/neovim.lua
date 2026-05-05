@@ -1,13 +1,12 @@
 return {
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "bjarneo/white.nvim",
     priority = 1000,
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "white",
     },
   },
 }

@@ -1,13 +1,12 @@
 return {
   {
-    "catppuccin/nvim",
-    name = "catppuccin",
+    "omacom-io/lumon.nvim",
     priority = 1000,
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin",
+      colorscheme = "lumon",
     },
   },
 }
