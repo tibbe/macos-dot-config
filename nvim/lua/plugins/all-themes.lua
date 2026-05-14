@@ -109,8 +109,7 @@ return {
 		priority = 1000,
 	},
 	{
-		dir = vim.fn.stdpath("config") .. "/local-plugins/vscode-dark-2026.nvim",
-		name = "vscode-dark-2026",
+		"rosekamallove/vscode-dark-2026.nvim",
 		lazy = true,
 		priority = 1000,
 	},
