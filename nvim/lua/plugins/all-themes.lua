@@ -103,9 +103,4 @@ return {
 		lazy = true,
 		priority = 1000,
 	},
-	{
-		"Mofiqul/vscode.nvim",
-		lazy = true,
-		priority = 1000,
-	},
 }
