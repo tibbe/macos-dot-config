@@ -108,9 +108,4 @@ return {
 		lazy = true,
 		priority = 1000,
 	},
-	{
-		"rosekamallove/vscode-dark-2026.nvim",
-		lazy = true,
-		priority = 1000,
-	},
 }
