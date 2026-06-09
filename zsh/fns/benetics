@@ -38,3 +38,68 @@ tdlw() {
     echo "tdlw: created $newpath (not in tmux)."
   fi
 }
+
+# Tear down the current worktree and its tmux window. Always removes the
+# worktree; removes the branch only if all its commits have landed on
+# origin/main (detected by patch-id via `git cherry`, so rebase/squash
+# merges count as landed). Refuses dirty state unless --force, which also
+# promotes branch deletion to unconditional.
+# Usage: twrm [--force]
+twrm() {
+  local force=false
+  if [[ $1 == --force ]]; then
+    force=true
+    shift
+  fi
+  [[ $# -gt 0 ]] && { echo "Usage: twrm [--force]"; return 1; }
+
+  git rev-parse --git-dir >/dev/null 2>&1 || { echo "Not in a git repo."; return 1; }
+
+  local current_root main_root branch
+  current_root=$(git rev-parse --show-toplevel)
+  main_root=$(git worktree list --porcelain | awk '/^worktree /{print substr($0,10); exit}')
+
+  if [[ $current_root == $main_root ]]; then
+    echo "twrm: refusing to remove the main worktree."
+    return 1
+  fi
+
+  branch=$(git branch --show-current)
+  if [[ -z $branch ]]; then
+    echo "twrm: detached HEAD — no branch to deal with."
+    return 1
+  fi
+
+  if [[ -n $(git status --porcelain) ]] && ! $force; then
+    echo "twrm: worktree is dirty. Commit, stash, or rerun with --force."
+    return 1
+  fi
+
+  git fetch origin main --quiet || { echo "twrm: git fetch origin main failed."; return 1; }
+
+  # Leave the doomed directory before removing it.
+  cd "$main_root" || return 1
+
+  if $force; then
+    git worktree remove --force "$current_root" || return 1
+  else
+    git worktree remove "$current_root" || return 1
+  fi
+
+  # `git cherry` compares by patch-id, so it correctly reports rebase- and
+  # squash-merged commits as landed (where `git branch -d`'s SHA check fails).
+  # `-D` is used because rebase changes SHAs even when patches are identical.
+  if git cherry origin/main "$branch" | grep -q '^+ '; then
+    if $force; then
+      git branch -D "$branch" >/dev/null
+      echo "twrm: removed $current_root and branch $branch (--force; unmerged commits discarded)."
+    else
+      echo "twrm: removed $current_root; kept branch $branch (has unmerged commits)."
+    fi
+  else
+    git branch -D "$branch" >/dev/null
+    echo "twrm: removed $current_root and branch $branch (fully landed on origin/main)."
+  fi
+
+  [[ -n $TMUX ]] && tmux kill-window
+}
