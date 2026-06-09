@@ -75,11 +75,13 @@ twrm() {
     return 1
   fi
 
-  git fetch origin main --quiet || { echo "twrm: git fetch origin main failed."; return 1; }
+  echo "twrm: fetching origin/main..."
+  git fetch origin main || { echo "twrm: git fetch origin main failed."; return 1; }
 
   # Leave the doomed directory before removing it.
   cd "$main_root" || return 1
 
+  echo "twrm: removing $current_root..."
   if $force; then
     git worktree remove --force "$current_root" || return 1
   else
