@@ -51,6 +51,9 @@ alias t='tmux attach || tmux new -s Work'
 alias ic='tdl c'
 alias ix='tdl cx'
 alias icx='tdl c cx'
+alias icw='tdlw c --'
+alias ixw='tdlw cx --'
+alias icxw='tdlw c cx --'
 n() { if [ "$#" -eq 0 ]; then command nvim . ; else command nvim "$@"; fi; }
 
 # Git

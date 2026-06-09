@@ -1,0 +1,40 @@
+# Create a new git worktree via scripts/setup-worktree.sh and, if running
+# inside tmux, open a tdl layout for it in a new window.
+# Usage: tdlw <ai> [<ai2>] -- <branch-name> [setup-worktree.sh args...]
+tdlw() {
+  local usage="Usage: tdlw <ai> [<ai2>] -- <branch-name> [setup-worktree.sh args...]"
+  git rev-parse --git-dir >/dev/null 2>&1 || { echo "Not in a git repo."; return 1; }
+
+  local ai="" ai2=""
+  case $# in
+    0|1) echo "$usage"; return 1 ;;
+  esac
+  ai="$1"; shift
+  if [[ $1 != -- ]]; then
+    ai2="$1"; shift
+  fi
+  [[ $1 == -- ]] || { echo "$usage"; return 1; }
+  shift
+  [[ -z $1 ]] && { echo "tdlw: missing branch name."; return 1; }
+
+  local main_root before after newpath pane_id
+  # setup-worktree.sh anchors paths to wherever it runs, so run it from the
+  # main checkout (the first entry of `git worktree list`).
+  main_root=$(git worktree list --porcelain | awk '/^worktree /{print substr($0,10); exit}')
+  before=$(git worktree list --porcelain | awk '/^worktree /{print substr($0,10)}' | sort)
+  ( cd "$main_root" && scripts/setup-worktree.sh "$@" ) || return 1
+  after=$(git worktree list --porcelain | awk '/^worktree /{print substr($0,10)}' | sort)
+  newpath=$(comm -13 <(printf '%s\n' "$before") <(printf '%s\n' "$after") | head -1)
+
+  if [[ -z $newpath ]]; then
+    echo "tdlw: worktree created, but couldn't auto-detect its path."
+    return 1
+  fi
+
+  if [[ -n $TMUX ]]; then
+    pane_id=$(tmux new-window -c "$newpath" -P -F '#{pane_id}')
+    tmux send-keys -t "$pane_id" "tdl $ai $ai2" C-m
+  else
+    echo "tdlw: created $newpath (not in tmux)."
+  fi
+}
