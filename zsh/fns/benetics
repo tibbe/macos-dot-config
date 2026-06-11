@@ -81,7 +81,7 @@ twrm() {
   fi
 
   echo "twrm: fetching origin/main..."
-  git fetch origin main || { echo "twrm: git fetch origin main failed."; return 1; }
+  git fetch --quiet origin main || { echo "twrm: git fetch origin main failed."; return 1; }
 
   # Leave the doomed directory before removing it.
   cd "$main_root" || return 1
