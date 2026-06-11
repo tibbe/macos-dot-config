@@ -44,16 +44,16 @@ alias ....='cd ../../..'
 
 # Tools
 alias c='opencode'
-alias cx='printf "\033[2J\033[3J\033[H" && claude --permission-mode bypassPermissions'
+alias cx='printf "\033[2J\033[3J\033[H" && claude --permission-mode bypassPermissions --ide'
 alias d='docker'
 alias r='rails'
 alias t='tmux attach || tmux new -s Work'
 alias ic='tdl c'
-alias ix='tdl cx'
-alias icx='tdl c cx'
+alias ix='tdl cxi'
+alias icx='tdl c cxi'
 alias icw='tdlw c --'
-alias ixw='tdlw cx --'
-alias icxw='tdlw c cx --'
+alias ixw='tdlw cxi --'
+alias icxw='tdlw c cxi --'
 n() { if [ "$#" -eq 0 ]; then command nvim . ; else command nvim "$@"; fi; }
 
 # Git

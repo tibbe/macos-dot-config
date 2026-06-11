@@ -1,0 +1,14 @@
+# Variant of cx that waits for claudecode.nvim's IDE server to register for
+# the current directory before launching Claude. Use when pairing Claude with
+# Neovim.
+cxi() {
+  local cwd="$PWD" deadline=$(( SECONDS + 10 ))
+  while (( SECONDS < deadline )); do
+    for lock in ~/.claude/ide/*.lock(N); do
+      grep -Fq "\"$cwd\"" "$lock" 2>/dev/null && { cx "$@"; return }
+    done
+    sleep 0.05
+  done
+  echo "cxi: no Neovim IDE server for $cwd after 10s — launching anyway" >&2
+  cx "$@"
+}
