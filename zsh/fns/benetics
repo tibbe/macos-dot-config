@@ -55,9 +55,14 @@ twrm() {
 
   git rev-parse --git-dir >/dev/null 2>&1 || { echo "Not in a git repo."; return 1; }
 
-  local current_root main_root branch
+  local current_root main_root branch win_id
   current_root=$(git rev-parse --show-toplevel)
   main_root=$(git worktree list --porcelain | awk '/^worktree /{print substr($0,10); exit}')
+
+  # `tmux kill-window` with no -t resolves the current window when it *runs*,
+  # not when invoked. Pin the invoking window now so the kill at the end hits
+  # it even if the user switches windows during the slow git steps below.
+  [[ -n $TMUX ]] && win_id=$(tmux display-message -p '#{window_id}')
 
   if [[ $current_root == $main_root ]]; then
     echo "twrm: refusing to remove the main worktree."
@@ -103,5 +108,5 @@ twrm() {
     echo "twrm: removed $current_root and branch $branch (fully landed on origin/main)."
   fi
 
-  [[ -n $TMUX ]] && tmux kill-window
+  [[ -n $win_id ]] && tmux kill-window -t "$win_id"
 }
