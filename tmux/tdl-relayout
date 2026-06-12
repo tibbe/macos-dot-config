@@ -1,0 +1,23 @@
+#!/bin/sh
+# Restore tdl pane proportions for panes marked @tdl_main.
+#
+# A marked pane carries @tdl_w/@tdl_h giving its intended width/height as
+# percentages. Splitting with -p sizes panes only once, so a client resize
+# (e.g. moving the laptop between monitors) drifts the layout; this re-asserts
+# each marked pane's proportions. Unmarked panes are left untouched.
+#
+# Usage: tdl-relayout [window_id]
+#   no arg  -> every marked pane on the server
+#   win id  -> only marked panes in that window
+
+if [ -n "$1" ]; then
+  set -- -t "$1"
+else
+  set -- -a
+fi
+
+tmux list-panes "$@" -F '#{@tdl_main} #{pane_id} #{@tdl_w} #{@tdl_h}' |
+while read -r main pane w h; do
+  [ "$main" = 1 ] || continue
+  tmux resize-pane -t "$pane" -x "${w:-70}%" -y "${h:-85}%"
+done

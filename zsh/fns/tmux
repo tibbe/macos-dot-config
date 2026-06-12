@@ -21,6 +21,12 @@ tdl() {
   # Split editor pane horizontally - AI on right 30% (capture new pane ID directly)
   ai_pane=$(tmux split-window -h -p 30 -t "$editor_pane" -c "$current_dir" -P -F '#{pane_id}')
 
+  # Mark the editor pane with its intended proportions so tdlr / the
+  # client-resized hook can restore them after a monitor switch.
+  tmux set-option -p -t "$editor_pane" @tdl_main 1
+  tmux set-option -p -t "$editor_pane" @tdl_w 70
+  tmux set-option -p -t "$editor_pane" @tdl_h 85
+
   # If second AI provided, split the AI pane vertically
   if [[ -n $ai2 ]]; then
     ai2_pane=$(tmux split-window -v -t "$ai_pane" -c "$current_dir" -P -F '#{pane_id}')
@@ -35,6 +41,19 @@ tdl() {
 
   # Select the nvim pane for focus
   tmux select-pane -t "$editor_pane"
+}
+
+# Restore tdl pane proportions (editor 70% wide, 85% tall) after the layout
+# drifts, e.g. moving the laptop between monitors. The client-resized hook in
+# tmux.conf does this automatically; run tdlr to fix things by hand.
+# Usage: tdlr [-a]   (-a: all windows; default: current window only)
+tdlr() {
+  [[ -z $TMUX ]] && { echo "You must start tmux to use tdlr."; return 1; }
+  if [[ $1 == -a ]]; then
+    ~/.config/tmux/tdl-relayout
+  else
+    ~/.config/tmux/tdl-relayout "$(tmux display-message -p '#{window_id}')"
+  fi
 }
 
 # Create multiple tdl windows with one per subdirectory in the current directory
