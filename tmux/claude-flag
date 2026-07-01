@@ -1,0 +1,17 @@
+#!/bin/sh
+# Flag the tmux window containing the calling process as waiting for input, so
+# window-status-format can badge it. Driven by Claude Code hooks. No-op on the
+# active window (already in view) or outside tmux.
+
+[ -n "$TMUX" ] && [ -n "$TMUX_PANE" ] || exit 0
+
+info=$(tmux display-message -t "$TMUX_PANE" -p '#{window_id} #{window_active}' 2>/dev/null) || exit 0
+win=${info% *}
+active=${info##* }
+[ -n "$win" ] || exit 0
+
+# Don't badge the window you're already viewing; flag only backgrounded ones.
+[ "$active" = 1 ] && exit 0
+tmux set-option -w -t "$win" @claude_waiting 1 2>/dev/null
+
+exit 0
