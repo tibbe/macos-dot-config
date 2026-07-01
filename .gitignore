@@ -1,16 +1,22 @@
-Autodesk/
-cagent/
-configstore/
-diesel_cli/
-flipper/
-fish/
-gh/
-temporalio/
-uv/
-wireshark/
-yarn/
+# Allowlist .gitignore: ignore everything, then re-include the configs worth
+# versioning. Anything a new tool drops under ~/.config -- including secrets or
+# machine-local state -- stays untracked until explicitly opted in here.
 
-# Machine-local state and generated artifacts
+# /* matches top-level entries only, so files inside the re-included dirs below
+# aren't caught by it.
+/*
+
+!/.gitignore
+!/README.md
+!/ghostty/
+!/git/
+!/nvim/
+!/omarchy/
+!/tmux/
+!/zsh/
+
+# Machine-local state and generated artifacts inside the tracked dirs above.
+# Last match wins, so these must stay below the re-includes to take effect.
 .DS_Store
 .nvimlog
 nvim/.nvimlog
