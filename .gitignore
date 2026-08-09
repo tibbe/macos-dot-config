@@ -13,6 +13,7 @@
 !/nvim/
 !/omarchy/
 !/tmux/
+!/tuicr/
 !/zsh/
 
 # Machine-local state and generated artifacts inside the tracked dirs above.
