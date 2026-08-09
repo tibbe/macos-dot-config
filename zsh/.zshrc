@@ -128,3 +128,5 @@ export AWS_SDK_LOAD_CONFIG=1
 
 . "$HOME/.local/bin/env"
 . "/Users/tibbe/.deno/env"
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
