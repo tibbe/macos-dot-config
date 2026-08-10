@@ -1,0 +1,18 @@
+#!/bin/sh
+# Print a tmux window name for a pane's working directory: the git branch when
+# inside a work tree, else the directory's basename. Wired to
+# automatic-rename-format to mirror herdr's per-worktree branch slug.
+#
+# Usage: window-name <path>
+
+dir=${1:-$PWD}
+dir=${dir%/}
+
+# --show-current, unlike rev-parse --abbrev-ref, names the branch on an unborn
+# branch (fresh worktree, no commits yet) and stays empty on a detached HEAD.
+branch=$(cd "$dir" 2>/dev/null && git branch --show-current 2>/dev/null)
+if [ -n "$branch" ]; then
+  printf '%s\n' "$branch"
+else
+  printf '%s\n' "${dir##*/}"
+fi
