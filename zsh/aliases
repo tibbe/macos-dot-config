@@ -48,6 +48,7 @@ alias cx='printf "\033[2J\033[3J\033[H" && claude --permission-mode bypassPermis
 alias d='docker'
 alias r='rails'
 alias t='tmux attach || tmux new -s Work'
+alias h='herdr'
 alias ic='tdl c'
 alias ix='tdl cxi'
 alias icx='tdl c cxi'

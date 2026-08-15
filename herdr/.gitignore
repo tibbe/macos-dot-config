@@ -1,0 +1,7 @@
+# Allowlist: herdr drops logs, sockets, session state, release notes, and
+# vendored plugins in this dir alongside config.toml. Ignore everything, then
+# re-include the files worth versioning.
+/*
+
+!.gitignore
+!config.toml
