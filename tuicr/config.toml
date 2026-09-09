@@ -1,1 +1,2 @@
 theme = "catppuccin-mocha"
+diff_watch_interval_ms = 1000 # auto-reload the local diff as the agent works
