@@ -1,0 +1,16 @@
+# Review the current branch in tuicr: commits since it diverged from the default
+# branch (as worktrunk defines it, which is what wt-created worktrees branch
+# from) plus staged and unstaged changes. On the default branch itself, or when
+# the branch has no commits of its own, review just the working tree.
+# Usage: review [tuicr args...]
+review() {
+  local base count=0
+  base=$(wt step eval '{{ default_branch }}' 2>/dev/null)
+  [[ -n $base ]] && count=$(git rev-list --count "$base..HEAD" 2>/dev/null || echo 0)
+
+  if (( count > 0 )); then
+    tuicr -r "$base..HEAD" -w "$@"
+  else
+    tuicr -w "$@"
+  fi
+}
